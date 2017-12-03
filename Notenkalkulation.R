@@ -12,3 +12,15 @@ GPA_Notenliste <- Notenliste %>%
 
 Notenschnitt <- round(sum(GPA_Notenliste$`Gewichtete Note`) / sum(GPA_Notenliste$ECTS), digits = 1)
 GesamtECTS <- sum(Notenliste$ECTS)
+
+## Rang der schlechtesten Noten im Pflichtbereich identifizieren
+
+Eligible_for_removal <- filter(GPA_Notenliste, GPA_Notenliste$Bereich != "WB")
+Eligible_for_removal <- arrange(Eligible_for_removal, desc(Eligible_for_removal$Note))
+
+Optimal_List <- tail(Eligible_for_removal,-2) %>% 
+  rbind(filter(GPA_Notenliste,GPA_Notenliste$Bereich == "WB"))
+
+NotenschnittOptimal <- round(sum(Optimal_List$`Gewichtete Note`) / sum(Optimal_List$ECTS),1)
+
+
