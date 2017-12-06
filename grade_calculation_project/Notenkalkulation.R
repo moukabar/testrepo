@@ -1,6 +1,6 @@
 rm(list = ls())
 library(tidyverse)
-Notenliste <- read_csv("Exams_Humboldt.csv")
+Notenliste <- read_csv("grade_calculation_project/subject_grade_list/Exams_Humboldt F2.csv")
 
 Notenliste <- Notenliste %>% 
   select(Klausurname, Bereich, ECTS, Note) %>% 
@@ -21,6 +21,4 @@ Eligible_for_removal <- arrange(Eligible_for_removal, desc(Eligible_for_removal$
 Optimal_List <- tail(Eligible_for_removal,-2) %>% 
   rbind(filter(GPA_Notenliste,GPA_Notenliste$Bereich == "WB"))
 
-NotenschnittOptimal <- round(sum(Optimal_List$`Gewichtete Note`) / sum(Optimal_List$ECTS),1)
-
-
+NotenschnitOptimal <- round(sum(Optimal_List$`Gewichtete Note`) / sum(Optimal_List$ECTS),1)
