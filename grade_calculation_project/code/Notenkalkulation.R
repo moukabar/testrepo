@@ -1,3 +1,6 @@
+# Grade calculation project
+## This code calculates the optimal GPA for the given csv (at the moment)
+
 rm(list = ls())
 library(tidyverse)
 Notenliste <- read_csv("grade_calculation_project/subject_grade_list/Exams_Humboldt F1.csv")
