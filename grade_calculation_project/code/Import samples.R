@@ -12,12 +12,17 @@ names <- substr(filenames, 46, nchar(filenames) - 4)
 
 list2env(list ,.GlobalEnv)
 
-`Exams_Humboldt F1` <-  mutate(`Exams_Humboldt F1`, subject_id = substring("Exams_Humboldt F1",nchar("Exams_Humboldt F1") - 2))
-`Exams_Humboldt F2` <-  mutate(`Exams_Humboldt F2`, subject_id = substring("Exams_Humboldt F2",nchar("Exams_Humboldt F2") - 2))
+##Build one subject sample
 
-subjects <- bind_rows(`Exams_Humboldt F1`,`Exams_Humboldt F2`) %>% 
-  select("Klausurname","Bereich","ECTS","Note","subject_id") %>% 
-  filter(!is.na(Note))
+subjects <- numeric(0)
+
+for(i in 1:length(filenames)) {
+  file <- read.csv(filenames[i])
+  file <- select(file,"Klausurname","Bereich","ECTS","Note")
+  file <- filter(file,!is.na(Note))
+  file$"subject_id" <- substr(names[i],15,nchar(names[i]))
+  subjects <- rbind(subjects, file)
+}
 
 ggplot(subjects, mapping = aes(x= Klausurname, y= Note, color = subject_id)) +
   geom_jitter()
