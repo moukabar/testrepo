@@ -124,4 +124,9 @@ bad_flight$is_same[1] = 0
 
 bad_flight <- bad_flight %>% 
   group_by(tailnum) %>% 
-  mutate(late_id_per_tailnum = cumsum(is_same)*is_late)
+  mutate(late_id_per_tailnum = (cumsum(is_same)*is_late)+1*is_late) %>% 
+  filter(late_id_per_tailnum != "0") %>% 
+  summarise(
+    first_delayed_flight = min(late_id_per_tailnum)
+  )
+
