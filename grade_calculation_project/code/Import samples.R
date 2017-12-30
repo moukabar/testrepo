@@ -24,5 +24,7 @@ for(i in 1:length(filenames)) {
   subjects <- rbind(subjects, file)
 }
 
+##Perform exploratory tests (to be deactivated)
+
 ggplot(subjects, mapping = aes(x= Klausurname, y= Note, color = subject_id)) +
   geom_jitter()
