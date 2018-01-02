@@ -1,5 +1,7 @@
 rm(list = ls())
 
+library(lvplot)
+
 diamonds <- filter(diamonds, z < 20)
 
 ggplot(data = diamonds) +
@@ -27,6 +29,17 @@ ggplot(diamonds,aes(x = carat, y = price)) +
   geom_point() +
   geom_smooth()
 
-install.packages("lvplot")
+diamonds <- mutate(diamonds, carat_class = findInterval(diamonds$carat, c(0:6)))
 
-ggplot(diamonds,aes(x = carat, y = price)) +
+diamond_final <- numeric(0)
+
+for (i in c(1:6)) {
+diamond_subset <- filter(diamonds,carat_class == i)
+diamond_subset <- mutate(diamond_subset, carat_class = paste0(i-1,"-", i))
+diamond_final <- rbind(diamond_final, diamond_subset)
+}
+
+ggplot(diamonds) +
+  geom_bar(aes(x = carat_class)) +
+  coord_cartesian(ylim = c(0,100))
+  
