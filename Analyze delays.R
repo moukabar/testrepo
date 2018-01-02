@@ -113,8 +113,6 @@ diverse_carriers <- flights %>%
 
 bad_flight <- flights 
 
-## TO_DO fix calculation of cumsum
-
 bad_flight <- arrange(bad_flight, tailnum, year, month, day) %>% 
   mutate(is_late = arr_delay > 60, is_same = tailnum == lag(tailnum)) %>% 
   select(year, month, day, tailnum, is_late, is_same)
@@ -127,6 +125,11 @@ bad_flight <- bad_flight %>%
   mutate(late_id_per_tailnum = (cumsum(is_same)*is_late)+1*is_late) %>% 
   filter(late_id_per_tailnum != "0") %>% 
   summarise(
-    first_delayed_flight = min(late_id_per_tailnum)
-  )
+    first_delayed_flight = min(late_id_per_tailnum))
 
+is_cancelled <- flights %>% mutate(cancelled = is.na(dep_time), dep_hour = sched_dep_time %/% 100, dep_minute = sched_dep_time %% 100, dep_time_con = dep_hour + dep_minute/60) %>% 
+  select(sched_dep_time, dep_hour, dep_minute, cancelled, dep_time_con)
+
+ggplot(is_cancelled) +
+  #geom_freqpoly(mapping = aes(color = cancelled, x = dep_time_con, y = ..density..))
+  geom_boxplot(aes(x = cancelled, y = dep_time_con))
